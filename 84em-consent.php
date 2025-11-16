@@ -3,7 +3,7 @@
  * Plugin Name:         84EM Consent
  * Plugin URI:          https://84em.com/
  * Description:         A WordPress plugin that provides a simple cookie consent banner
- * Version:             1.2.2
+ * Version:             1.3.0
  * Author:              84EM
  * Requires at least:   6.8
  * Requires PHP:        8.0
@@ -106,13 +106,16 @@ class SimpleConsent {
      * Enqueues necessary CSS and JavaScript assets for the plugin, applies custom styles,
      * and localizes the script with dynamic data for client-side interaction.
      *
+     * Uses async CSS loading and deferred JavaScript for optimal performance.
+     *
      * @return void
      */
     public function enqueue_assets(): void {
         wp_enqueue_style(
             handle: '84em-consent',
             src: plugin_dir_url( __FILE__ ) . 'assets/consent.min.css',
-            ver: $this->config['cookie_version']
+            ver: $this->config['cookie_version'],
+            media: 'print'
         );
 
         $custom_css = sprintf(
@@ -129,19 +132,22 @@ class SimpleConsent {
             handle: '84em-consent',
             src: plugin_dir_url( __FILE__ ) . 'assets/consent.min.js',
             ver: $this->config['cookie_version'],
-            args: [ 'in_footer' => true, 'strategy' => 'async' ],
+            args: [
+                'strategy'  => 'defer',
+                'in_footer' => true,
+            ]
         );
 
         wp_localize_script(
             handle: '84em-consent',
             object_name: 'e84Consent',
             l10n: [
-                'version'     => $this->config['cookie_version'],
-                'duration'    => $this->config['cookie_duration'],
-                'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
-                'nonce'       => wp_create_nonce( '84em-consent-nonce' ),
-                'isSecure'    => is_ssl(),
-                'cookiePath'  => COOKIEPATH,
+                'version'      => $this->config['cookie_version'],
+                'duration'     => $this->config['cookie_duration'],
+                'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+                'nonce'        => wp_create_nonce( '84em-consent-nonce' ),
+                'isSecure'     => is_ssl(),
+                'cookiePath'   => COOKIEPATH,
                 'cookieDomain' => COOKIE_DOMAIN,
             ]
         );

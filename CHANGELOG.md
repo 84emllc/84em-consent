@@ -5,6 +5,22 @@ All notable changes to the 84EM Consent plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-11-16
+### Added
+- **Performance Optimizations** - Improved loading speed and reduced render-blocking resources
+  - Implemented async CSS loading using `media: 'print'` technique to prevent blocking initial render (`84em-consent.php:118`)
+  - Added PHPDoc note about performance optimizations (`84em-consent.php:109`)
+
+### Changed
+- **Script Loading Strategy** - Updated JavaScript to use modern WordPress 6.3+ defer strategy
+  - Changed from `'strategy' => 'async'` to `'strategy' => 'defer'` for better execution control (`84em-consent.php:136`)
+  - Ensures script executes after DOM is ready and in order with localized data
+  - Maintains `'in_footer' => true` for optimal performance
+- **Expected Performance Improvements**
+  - Reduced render-blocking CSS (consent banner CSS loads asynchronously)
+  - Better script execution timing (defer ensures DOM ready before execution)
+  - Works seamlessly with theme's async CSS loader in `performance.php`
+
 ## [1.2.2] - 2025-11-15
 ### Changed
 - Refined accent color to improve visual consistency
