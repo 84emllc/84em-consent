@@ -57,10 +57,10 @@
         banner.hidden = false;
         banner.setAttribute('aria-hidden', 'false');
 
-        // Focus management for accessibility
+        // Focus management for accessibility without scrolling
         const acceptBtn = banner.querySelector('#e84-consent-accept');
         if (acceptBtn) {
-            acceptBtn.focus();
+            acceptBtn.focus({ preventScroll: true });
         }
     }
 

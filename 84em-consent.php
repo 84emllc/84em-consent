@@ -3,7 +3,7 @@
  * Plugin Name:         84EM Consent
  * Plugin URI:          https://84em.com/
  * Description:         A WordPress plugin that provides a simple cookie consent banner
- * Version:             1.3.0
+ * Version:             1.3.1
  * Author:              84EM
  * Requires at least:   6.8
  * Requires PHP:        8.0
