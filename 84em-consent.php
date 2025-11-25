@@ -3,7 +3,7 @@
  * Plugin Name:         84EM Consent
  * Plugin URI:          https://84em.com/
  * Description:         A WordPress plugin that provides a simple cookie consent banner
- * Version:             1.3.0
+ * Version:             1.3.2
  * Author:              84EM
  * Requires at least:   6.8
  * Requires PHP:        8.0
@@ -157,53 +157,43 @@ class SimpleConsent {
      * Renders the HTML structure for a cookie consent banner, including text, buttons,
      * and optional logo and policy link, with accessibility features.
      *
+     * Output is minified to a single line for cleaner page source.
+     *
      * @return void
      */
     public function render_banner(): void {
-        ?>
-        <div id="e84-consent-banner"
-             class="e84-consent-banner"
-             role="region"
-             aria-label="<?php esc_attr_e( 'Cookie consent', '84em-consent' ); ?>"
-             aria-live="polite"
-             hidden>
-            <div class="e84-consent-container">
-                <div class="e84-consent-content">
-                    <?php if ( ! empty( $this->config['logo_url'] ) ) : ?>
-                        <img src="<?php echo esc_url( $this->config['logo_url'] ); ?>"
-                             alt=""
-                             class="e84-consent-logo"
-                             width="24"
-                             height="24"
-                             loading="lazy"
-                             decoding="async">
-                    <?php endif; ?>
+        $logo_html = '';
+        if ( ! empty( $this->config['logo_url'] ) ) {
+            $logo_html = sprintf(
+                '<img src="%s" alt="" class="e84-consent-logo" width="24" height="24" loading="lazy" decoding="async">',
+                esc_url( $this->config['logo_url'] )
+            );
+        }
 
-                    <p id="e84-consent-text" class="e84-consent-text">
-                        <?php echo esc_html( $this->config['banner_text'] ); ?>
-                    </p>
-                </div>
+        $learn_more_html = '';
+        if ( $this->config['policy_url'] ) {
+            $learn_more_html = sprintf(
+                '<button type="button" id="e84-consent-learn-more" class="e84-consent-button e84-consent-button-secondary" data-url="%s">%s</button>',
+                esc_url( $this->config['policy_url'] ),
+                esc_html__( 'Learn More', '84em-consent' )
+            );
+        }
 
-                <div class="e84-consent-buttons">
-                    <button type="button"
-                            id="e84-consent-accept"
-                            class="e84-consent-button e84-consent-button-primary"
-                            aria-describedby="e84-consent-text">
-                        <?php esc_html_e( text: 'OK', domain: '84em-consent' ); ?>
-                    </button>
+        $html = sprintf(
+            '<div id="e84-consent-banner" class="e84-consent-banner" role="region" aria-label="%s" aria-live="polite" hidden>' .
+            '<div class="e84-consent-container">' .
+            '<div class="e84-consent-content">%s<p id="e84-consent-text" class="e84-consent-text">%s</p></div>' .
+            '<div class="e84-consent-buttons">' .
+            '<button type="button" id="e84-consent-accept" class="e84-consent-button e84-consent-button-primary" aria-describedby="e84-consent-text">%s</button>' .
+            '%s</div></div></div>',
+            esc_attr__( 'Cookie consent', '84em-consent' ),
+            $logo_html,
+            esc_html( $this->config['banner_text'] ),
+            esc_html__( 'OK', '84em-consent' ),
+            $learn_more_html
+        );
 
-                    <?php if ( $this->config['policy_url'] ) : ?>
-                        <button type="button"
-                                id="e84-consent-learn-more"
-                                class="e84-consent-button e84-consent-button-secondary"
-                                data-url="<?php echo esc_url( $this->config['policy_url'] ); ?>">
-                            <?php esc_html_e( text: 'Learn More', domain: '84em-consent' ); ?>
-                        </button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-        <?php
+        echo $html;
     }
 
     /**
