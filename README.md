@@ -36,7 +36,7 @@ add_filter('84em_consent_simple_config', function($config) {
     $config['accent_color'] = '#D45404';
     $config['banner_text'] = 'We use only essential cookies for security and performance.';
     $config['policy_url'] = '/privacy-policy/';
-    $config['cookie_version'] = '2025-09-13';
+    $config['cookie_version'] = '2025-12-02';
     $config['cookie_duration'] = 180; // days
     $config['show_for_logged_in'] = false;
 
